@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import br.upe.finance.dtos.SaveResourceManagementDto;
 import br.upe.finance.models.ResourceManagement;
-import br.upe.finance.models.enums.ApprovalStatus;
 import lombok.AllArgsConstructor;
 
 @Component
@@ -20,7 +19,6 @@ public class SaveResourceManagementDtoMapper {
             .justification(dto.justification())
             .quantity(dto.quantity())
             .description(dto.description())
-            .approvalStatus(ApprovalStatus.PENDING)
             .build();
     }
 

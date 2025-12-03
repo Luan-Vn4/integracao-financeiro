@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import br.upe.finance.models.enums.ResourceCategory;
 import lombok.Builder;
-import br.upe.finance.models.enums.ApprovalStatus;
 
 // @formatter:off
 @Builder
@@ -26,8 +25,6 @@ public record ReadResourceManagementDto(
     Integer quantity,
 
     String description,
-
-    ApprovalStatus approvalStatus,
 
     LocalDateTime createdAt,
 

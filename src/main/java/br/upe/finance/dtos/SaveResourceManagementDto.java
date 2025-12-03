@@ -3,7 +3,6 @@ package br.upe.finance.dtos;
 import java.math.BigDecimal;
 
 import br.upe.finance.models.enums.ResourceCategory;
-import br.upe.finance.models.enums.ApprovalStatus;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

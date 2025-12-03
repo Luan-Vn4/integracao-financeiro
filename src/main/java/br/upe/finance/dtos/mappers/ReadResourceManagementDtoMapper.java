@@ -25,7 +25,6 @@ public class ReadResourceManagementDtoMapper {
             .justification(model.getJustification())
             .quantity(model.getQuantity())
             .description(model.getDescription())
-            .approvalStatus(model.getApprovalStatus())
             .createdAt(model.getCreatedAt())
             .updatedAt(model.getUpdatedAt())
             .build();

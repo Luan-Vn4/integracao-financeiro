@@ -8,8 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import br.upe.finance.models.enums.ResourceCategory;
-import br.upe.finance.models.enums.ApprovalStatus;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -45,7 +43,7 @@ public class ResourceManagement {
     private UUID id;
 
     @OneToOne
-    @Nullable
+    @NotNull
     @JoinColumn(name = "budget_item_id")
     private BudgetItem budgetItem;
 
@@ -72,11 +70,6 @@ public class ResourceManagement {
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-
-    @Column(name = "approval_status")
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private ApprovalStatus approvalStatus;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
