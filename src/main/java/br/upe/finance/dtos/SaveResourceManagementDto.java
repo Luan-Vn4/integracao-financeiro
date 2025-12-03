@@ -29,10 +29,7 @@ public record SaveResourceManagementDto(
     @Positive(message = "Quantity must be positive")
     Integer quantity,
 
-    String description,
-
-    @NotNull(message = "Approval status is required")
-    ApprovalStatus approvalStatus
+    String description
 ) {
 }
 // @formatter:on

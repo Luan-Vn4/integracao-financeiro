@@ -5,6 +5,10 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import br.upe.finance.dtos.ReadResourceManagementDto;
+import br.upe.finance.dtos.SaveResourceManagementDto;
+import br.upe.finance.dtos.mappers.ReadResourceManagementDtoMapper;
+import br.upe.finance.dtos.mappers.SaveResourceManagementDtoMapper;
 import br.upe.finance.models.ResourceManagement;
 import br.upe.finance.repositories.ResourceManagementRepository;
 import lombok.AllArgsConstructor;
@@ -15,11 +19,19 @@ public class ResourceManagementService {
 
     private final ResourceManagementRepository rmRepository;
 
-    public Optional<ResourceManagement> findById(UUID id) {
-        return rmRepository.findById(id);
+    private final ReadResourceManagementDtoMapper readResourceManagementDtoMapper;
+
+    private final SaveResourceManagementDtoMapper saveResourceManagementDtoMapper;
+
+    public Optional<ReadResourceManagementDto> findById(UUID id) {
+        return rmRepository.findById(id)
+            .map(readResourceManagementDtoMapper::fromModel);
     }
 
-    public ResourceManagement save(ResourceManagement resourceManagement) {
+    public ResourceManagement save(
+        SaveResourceManagementDto saveResourceManagementDto) {
+        ResourceManagement resourceManagement = saveResourceManagementDtoMapper
+            .toModel(saveResourceManagementDto);
         return rmRepository.save(resourceManagement);
     }
 

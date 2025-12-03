@@ -9,7 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import br.upe.finance.models.enums.ResourceCategory;
 import br.upe.finance.models.enums.ApprovalStatus;
-
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,6 +22,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,6 +33,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class ResourceManagement {
 
     /// Fields ///
@@ -43,7 +45,7 @@ public class ResourceManagement {
     private UUID id;
 
     @OneToOne
-    @NotNull
+    @Nullable
     @JoinColumn(name = "budget_item_id")
     private BudgetItem budgetItem;
 

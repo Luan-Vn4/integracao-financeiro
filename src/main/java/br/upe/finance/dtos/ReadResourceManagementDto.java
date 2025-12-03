@@ -5,9 +5,11 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import br.upe.finance.models.enums.ResourceCategory;
+import lombok.Builder;
 import br.upe.finance.models.enums.ApprovalStatus;
 
 // @formatter:off
+@Builder
 public record ReadResourceManagementDto(
     UUID id,
 
