@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import br.upe.finance.models.enums.BudgetType;
@@ -14,10 +13,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -37,7 +34,7 @@ public class BudgetItem {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @NotNull
     private UUID id;
 
@@ -46,9 +43,7 @@ public class BudgetItem {
     @NotNull
     private BudgetType type;
 
-    @Column(
-        name = "money_amount", precision = 19, scale = 4
-    )
+    @Column(name = "money_amount", precision = 19, scale = 4)
     @NotNull
     private BigDecimal moneyAmount;
 
