@@ -1,4 +1,11 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "editor.formatOnSave": true,
+    "editor.rulers": [
+        80
+    ],
+    "java.format.settings.url": "eclipse-formatter.xml",
+    "editor.indentSize": 4,
+    "editor.tabSize": 4,
 }
