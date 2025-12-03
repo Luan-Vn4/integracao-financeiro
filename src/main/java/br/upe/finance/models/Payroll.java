@@ -10,14 +10,18 @@ import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.JoinColumn;
@@ -37,21 +41,18 @@ public class Payroll {
     @NotNull
     private UUID id;
 
-    @Column(name = "worked_hours")
-    @NotNull
-    private Short workedHours;
-
     @Column(name = "payment_date")
     @NotNull
     private LocalDate paymentDate;
 
-    @Column(name = "commission_amount")
-    @Nullable
-    private Short commissionAmount;
+    @Column(name = "money_amount", precision = 19, scale = 4)
+    @NotNull
+    private BigDecimal moneyAmount;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @NotNull
     @JoinColumn(name = "budget_item_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private BudgetItem budgetItem;
 
     @CreationTimestamp

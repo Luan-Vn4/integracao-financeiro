@@ -5,9 +5,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import br.upe.finance.models.enums.ResourceCategory;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -42,9 +45,10 @@ public class ResourceManagement {
     @NotNull
     private UUID id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @NotNull
     @JoinColumn(name = "budget_item_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private BudgetItem budgetItem;
 
     @Column(name = "money_amount", precision = 19, scale = 4)

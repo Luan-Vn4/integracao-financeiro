@@ -5,44 +5,53 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import br.upe.finance.models.enums.SalaryType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "salaries")
+@Table(name = "appointments")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Salary {
+@Builder
+public class Appointment {
 
     /// Fields ///
 
     @Id
-    @Column(name = "employee_id")
+    @Column(name = "id")
     @NotNull
-    private UUID employeeId;
+    private UUID id;
+
+    @Column(name = "doctor_id")
+    @NotNull
+    private UUID doctorId;
+
+    @Column(name = "date")
+    @NotNull
+    private LocalDateTime date;
 
     @Column(name = "money_amount", precision = 19, scale = 4)
     @NotNull
     private BigDecimal moneyAmount;
-
-    @Column(name = "type")
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private SalaryType type;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -54,21 +63,28 @@ public class Salary {
     @NotNull
     private LocalDateTime updatedAt;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @NotNull
+    @JoinColumn(name = "budget_item_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private BudgetItem budgetItem;
+
     /// Public Methods ///
 
     @Override
     public String toString() {
         return String.format(
-            "Salary{employeeId=%s, moneyAmount=%s, type=%s}",
-            this.employeeId,
-            this.moneyAmount,
-            this.type
+            "Appointment{id=%s, doctorId=%s, date=%s, moneyAmount=%s}",
+            this.id,
+            this.doctorId,
+            this.date,
+            this.moneyAmount
         );
     }
 
     @Override
     public int hashCode() {
-        return this.employeeId.hashCode();
+        return this.id.hashCode();
     }
 
 }
