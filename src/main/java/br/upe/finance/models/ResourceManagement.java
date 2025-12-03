@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import br.upe.finance.models.enums.BudgetType;
 import br.upe.finance.models.enums.ResourceCategory;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -19,6 +20,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -27,6 +30,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.AccessLevel;
 
 @Entity
 @Table(name = "resource_management")
@@ -49,6 +53,7 @@ public class ResourceManagement {
     @NotNull
     @JoinColumn(name = "budget_item_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @Setter(AccessLevel.PRIVATE)
     private BudgetItem budgetItem;
 
     @Column(name = "money_amount", precision = 19, scale = 4)
@@ -87,6 +92,13 @@ public class ResourceManagement {
 
     /// Public Methods ///
 
+    public void setMoneyAmount(BigDecimal moneyAmount) {
+        this.moneyAmount = moneyAmount;
+        if (this.budgetItem != null) {
+            this.budgetItem.setMoneyAmount(moneyAmount.negate());
+        }
+    }
+
     @Override
     public String toString() {
         return String.format("ResourceManagement{id=%s}", this.id);
@@ -95,6 +107,24 @@ public class ResourceManagement {
     @Override
     public int hashCode() {
         return this.id.hashCode();
+    }
+
+    /// Private Methods ///
+
+    @PrePersist
+    private void createBudgetItemIfNeeded() {
+        if (this.budgetItem == null) {
+            BudgetItem budgetItem = BudgetItem.builder()
+                .type(BudgetType.RESOURCES)
+                .moneyAmount(this.moneyAmount.negate())
+                .build();
+            this.budgetItem = budgetItem;
+        }
+    }
+
+    @PreUpdate
+    private void updateBudgetItemMoneyAmount() {
+        this.budgetItem.setMoneyAmount(this.moneyAmount.negate());
     }
 
 }

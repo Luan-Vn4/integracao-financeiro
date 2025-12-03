@@ -20,11 +20,14 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import jakarta.annotation.Nullable;
+import br.upe.finance.models.enums.BudgetType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.JoinColumn;
+import lombok.AccessLevel;
 
 @Entity
 @Table(name = "payrolls")
@@ -53,6 +56,7 @@ public class Payroll {
     @NotNull
     @JoinColumn(name = "budget_item_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @Setter(AccessLevel.PRIVATE)
     private BudgetItem budgetItem;
 
     @CreationTimestamp
@@ -67,6 +71,13 @@ public class Payroll {
 
     /// Public Methods ///
 
+    public void setMoneyAmount(BigDecimal moneyAmount) {
+        this.moneyAmount = moneyAmount;
+        if (this.budgetItem != null) {
+            this.budgetItem.setMoneyAmount(moneyAmount.negate());
+        }
+    }
+
     @Override
     public String toString() {
         return String.format("Payroll{id=%s}", this.id);
@@ -75,6 +86,24 @@ public class Payroll {
     @Override
     public int hashCode() {
         return this.id.hashCode();
+    }
+
+    /// Private Methods ///
+
+    @PrePersist
+    private void createBudgetItemIfNeeded() {
+        if (this.budgetItem == null) {
+            BudgetItem budgetItem = BudgetItem.builder()
+                .type(BudgetType.PAYROLL)
+                .moneyAmount(this.moneyAmount.negate())
+                .build();
+            this.budgetItem = budgetItem;
+        }
+    }
+
+    @PreUpdate
+    private void updateBudgetItemMoneyAmount() {
+        this.budgetItem.setMoneyAmount(this.moneyAmount.negate());
     }
 
 }
