@@ -11,7 +11,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
@@ -49,6 +53,16 @@ public class Payroll {
     @NotNull
     @JoinColumn(name = "budget_item_id")
     private BudgetItem budgetItem;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    @NotNull
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    @NotNull
+    private LocalDateTime updatedAt;
 
     /// Public Methods ///
 

@@ -1,7 +1,11 @@
 package br.upe.finance.models;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import br.upe.finance.models.enums.SalaryType;
 import jakarta.annotation.Nullable;
@@ -45,14 +49,25 @@ public class Salary {
     @Nullable
     private BigDecimal commission;
 
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    @NotNull
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    @NotNull
+    private LocalDateTime updatedAt;
+
     /// Public Methods ///
 
     @Override
     public String toString() {
         return String.format(
-                "Salary{employeeId=%s, moneyAmount=%s, type=%s, commission=%s}",
-                this.employeeId,
-                this.moneyAmount, this.type, this.commission);
+            "Salary{employeeId=%s, moneyAmount=%s, type=%s, commission=%s}",
+            this.employeeId,
+            this.moneyAmount, this.type, this.commission
+        );
     }
 
     @Override
