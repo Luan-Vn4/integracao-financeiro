@@ -2,15 +2,15 @@ package br.upe.finance.dtos.mappers;
 
 import org.springframework.stereotype.Component;
 
-import br.upe.finance.dtos.SaveResourceManagementDto;
+import br.upe.finance.dtos.ResourceRequestDto;
 import br.upe.finance.models.ResourceManagement;
 import lombok.AllArgsConstructor;
 
 @Component
 @AllArgsConstructor
-public class SaveResourceManagementDtoMapper {
+public class ResourceRequestDtoMapper {
 
-    public ResourceManagement toModel(SaveResourceManagementDto dto) {
+    public ResourceManagement toModel(ResourceRequestDto dto) {
         return ResourceManagement
             .builder()
             .moneyAmount(dto.moneyAmount())

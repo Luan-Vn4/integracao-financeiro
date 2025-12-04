@@ -8,8 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-// @formatter:off
-public record SaveResourceManagementDto(
+public record ResourceRequestDto(
     @NotNull(message = "Money amount is required")
     @Positive(message = "Money amount must be positive")
     BigDecimal moneyAmount,
@@ -28,7 +27,4 @@ public record SaveResourceManagementDto(
     @Positive(message = "Quantity must be positive")
     Integer quantity,
 
-    String description
-) {
-}
-// @formatter:on
+    String description) {}

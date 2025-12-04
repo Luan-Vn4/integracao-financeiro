@@ -11,7 +11,6 @@ import br.upe.finance.repositories.common.CrudRepository;
 
 @Repository
 public interface ResourceManagementRepository
-		extends CrudRepository<ResourceManagement, UUID>,
-		JpaRepository<ResourceManagement, UUID>,
-		QuerydslPredicateExecutor<ResourceManagement> {
-}
+	extends CrudRepository<ResourceManagement, UUID>,
+	JpaRepository<ResourceManagement, UUID>,
+	QuerydslPredicateExecutor<ResourceManagement> {}

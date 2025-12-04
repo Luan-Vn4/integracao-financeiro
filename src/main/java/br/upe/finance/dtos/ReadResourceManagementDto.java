@@ -7,7 +7,6 @@ import java.util.UUID;
 import br.upe.finance.models.enums.ResourceCategory;
 import lombok.Builder;
 
-// @formatter:off
 @Builder
 public record ReadResourceManagementDto(
     UUID id,
@@ -28,7 +27,4 @@ public record ReadResourceManagementDto(
 
     LocalDateTime createdAt,
 
-    LocalDateTime updatedAt
-) {
-}
-// @formatter:on
+    LocalDateTime updatedAt) {}
