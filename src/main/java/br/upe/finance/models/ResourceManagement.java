@@ -82,12 +82,10 @@ public class ResourceManagement {
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
-    @NotNull
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    @NotNull
     private LocalDateTime updatedAt;
 
     /// Public Methods ///
