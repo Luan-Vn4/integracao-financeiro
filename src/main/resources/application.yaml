@@ -13,14 +13,27 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-
-eureka:
-  client:
-    enabled: ${EUREKA_ENABLED:false}
-    register-with-eureka: ${EUREKA_ENABLED:false}
-    fetch-registry: ${EUREKA_ENABLED:false}
-    service-url:
-      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/%7D
-  instance:
-    prefer-ip-address: true
+        '[format_sql]': true
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:admin}
+    password: ${RABBITMQ_PASSWORD:1234}
+    virtual-host: ${RABBITMQ_VIRTUAL_HOST:/}
+    publisher-confirm-type: correlated 
+    publisher-returns: true 
+    template:
+      mandatory: true
+    listener:
+      simple:
+        acknowledge-mode: auto
+        concurrency: 2
+        max-concurrency: 5
+        prefetch: 10
+        default-requeue-rejected: false 
+        retry:
+          enabled: true
+          initial-interval: 1000ms
+          max-interval: 10000ms
+          multiplier: 2.0
+          max-retries: 3

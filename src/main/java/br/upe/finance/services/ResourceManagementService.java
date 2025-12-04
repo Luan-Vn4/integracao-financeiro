@@ -13,6 +13,7 @@ import br.upe.finance.dtos.mappers.ReadResourceManagementDtoMapper;
 import br.upe.finance.dtos.mappers.ResourceRequestDtoMapper;
 import br.upe.finance.models.ResourceManagement;
 import br.upe.finance.repositories.ResourceManagementRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -41,6 +42,7 @@ public class ResourceManagementService {
             .map(readResourceManagementDtoMapper::fromModel);
     }
 
+    @Transactional
     public ResourceManagement requestResource(
         ResourceRequestDto resourceRequestDto) {
         ResourceManagement resourceManagement = resourceRequestDtoMapper
