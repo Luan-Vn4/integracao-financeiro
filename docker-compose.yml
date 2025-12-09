@@ -21,3 +21,20 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: dev
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src:/app/src
+      - ./pom.xml:/app/pom.xml
+      - ./docker-volumes/maven:/root/.m2
+      - ./target:/app/target
+    depends_on:
+      - postgres
+      - rabbitmq
