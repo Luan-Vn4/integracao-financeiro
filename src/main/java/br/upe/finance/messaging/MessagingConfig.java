@@ -40,7 +40,7 @@ public class MessagingConfig {
         return BindingBuilder
             .bind(resourcesRequestQueue)
             .to(resourcesExchange)
-            .with(BindingKeyName.ANY);
+            .with(BindingKeyName.RESOURCES_REQUEST_FINANCE);
     }
 
     /// Appointments ///
@@ -62,6 +62,6 @@ public class MessagingConfig {
         return BindingBuilder
             .bind(appointmentsRegisterQueue)
             .to(appointmentsExchange)
-            .with(BindingKeyName.ANY);
+            .with(BindingKeyName.APPOINTMENTS_CONFIRMED_FINANCE);
     }
 }
