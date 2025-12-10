@@ -34,7 +34,7 @@ services:
       - ./src:/app/src
       - ./pom.xml:/app/pom.xml
       - ./docker-volumes/maven:/root/.m2
-      - ./target:/app/target
+      - ./docker-volumes/target:/app/target
     depends_on:
       - postgres
       - rabbitmq
