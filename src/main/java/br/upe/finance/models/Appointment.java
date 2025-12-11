@@ -108,7 +108,13 @@ public class Appointment {
 
     @PreUpdate
     private void updateBudgetItemMoneyAmount() {
-        if (this.budgetItem != null) {
+        if (this.budgetItem == null) {
+            BudgetItem budgetItem = BudgetItem.builder()
+                .type(BudgetType.APPOINTMENTS)
+                .moneyAmount(this.moneyAmount)
+                .build();
+            this.budgetItem = budgetItem;
+        } else {
             this.budgetItem.setMoneyAmount(this.moneyAmount);
         }
     }

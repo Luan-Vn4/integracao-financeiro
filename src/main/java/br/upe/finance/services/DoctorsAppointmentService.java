@@ -15,6 +15,7 @@ import br.upe.finance.models.Salary;
 import br.upe.finance.repositories.AppointmentRepository;
 import br.upe.finance.repositories.PayrollRepository;
 import br.upe.finance.repositories.SalaryRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,13 +28,14 @@ public class DoctorsAppointmentService {
     private final PayrollRepository payrollRepository;
     private final SalaryRepository salaryRepository;
     private final AppointmentInfoDtoMapper appointmentMapper;
+    private final EntityManager entityManager;
 
     @Transactional
     public void receiveAppointmentInfo(AppointmentInfoDto dto) {
         System.out.println("Receiving appointment info: " + dto);
 
         Appointment appointment = appointmentMapper.toModel(dto);
-        appointmentRepository.save(appointment);
+        entityManager.persist(appointment);
 
         System.out.println("Appointment saved: " + appointment);
 
