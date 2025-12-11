@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Positive;
 
 public record SalaryRequestDto(
     @NotNull(message = "Employee ID is required")
-    UUID employeeId,
+    Integer employeeId,
 
     @NotNull(message = "Money amount is required")
     @Positive(message = "Money amount must be positive")

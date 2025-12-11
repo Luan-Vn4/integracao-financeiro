@@ -8,13 +8,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 public record AppointmentInfoDto(
-    @NotNull(message = "Doctor ID is required")
+    @NotNull(message = "O ID do(a) doutor(a) é obrigatório")
     UUID doctorId,
 
-    @NotNull(message = "Date is required")
+    @NotNull(message = "A data da consulta é obrigatória")
     LocalDate date,
 
-    @NotNull(message = "Money amount is required")
-    @Positive(message = "Money amount must be positive")
+    @NotNull(message = "O valor da consulta é obrigatório")
+    @Positive(message = "O valor da consulta deve ser positivo")
     BigDecimal moneyAmount
 ) {}
