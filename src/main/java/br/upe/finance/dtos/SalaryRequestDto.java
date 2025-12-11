@@ -1,7 +1,6 @@
 package br.upe.finance.dtos;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 import br.upe.finance.models.enums.SalaryType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

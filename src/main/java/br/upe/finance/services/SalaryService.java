@@ -1,8 +1,8 @@
 package br.upe.finance.services;
 
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +18,12 @@ import br.upe.finance.models.Salary;
 import br.upe.finance.repositories.PayrollRepository;
 import br.upe.finance.repositories.SalaryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SalaryService {
 
     /// Fields ///
@@ -47,19 +50,35 @@ public class SalaryService {
     @Transactional
     public ReadSalaryDto registerSalary(SalaryRequestDto dto) {
         Salary newSalary = salaryMapper.toModel(dto);
-
         Salary savedSalary = salaryRepository.save(newSalary);
 
-        Payroll firstPayroll = new Payroll();
-        
-        firstPayroll.setEmployeeId(savedSalary.getEmployeeId());
-        
-        firstPayroll.setPaymentDate(LocalDate.now());
-
-        firstPayroll.setMoneyAmount(savedSalary.getMoneyAmount());
-
-        payrollRepository.save(firstPayroll);
+        createPayrollIfNotExists(savedSalary, LocalDate.now());
 
         return readSalaryDtoMapper.fromModel(savedSalary);
+    }
+
+    /// Private Methods ///
+    
+    private void createPayrollIfNotExists(Salary salary, LocalDate date) {
+        LocalDate startOfMonth = date.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endOfMonth = date.with(TemporalAdjusters.lastDayOfMonth());
+
+        boolean exists = payrollRepository.findByEmployeeIdAndPaymentDateBetween(
+            salary.getEmployeeId(), startOfMonth, endOfMonth
+        ).isPresent();
+
+        if (!exists) {
+            log.info("Creating initial payroll for employee {}", salary.getEmployeeId());
+            
+            Payroll firstPayroll = new Payroll();
+            firstPayroll.setEmployeeId(salary.getEmployeeId());
+            firstPayroll.setPaymentDate(date);
+            firstPayroll.setMoneyAmount(salary.getMoneyAmount());
+            
+            payrollRepository.save(firstPayroll);
+        } else {
+            log.info("Payroll already exists for employee {} in month {}. Skipping creation.", 
+                salary.getEmployeeId(), date.getMonth());
+        }
     }
 }

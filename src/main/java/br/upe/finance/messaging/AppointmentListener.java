@@ -22,15 +22,15 @@ public class AppointmentListener {
 
     @RabbitListener(queues = QueueName.APPOINTMENTS)
     public void receiveAppointment(@Payload MsgFinanceiroDTO message) {
-        log.info("Informações de consulta recebidas: {}", message);
+        log.info("Received appointment message: {}", message);
 
         try {
             AppointmentInfoDto internalDto = msgMapper.toInternalDto(message);
             appointmentService.receiveAppointmentInfo(internalDto);
 
-            log.info("Consulta registrada com sucesso para o(a) doutor(a)(ID): {}", internalDto.doctorId());
+            log.info("Appointment processed successfully for Doctor ID: {}", internalDto.doctorId());
         } catch (Exception e) {
-            log.error("Erro ao processar informações: {}", message, e);
+            log.error("Error processing appointment message: {}", message, e);
         }
     }
 }
