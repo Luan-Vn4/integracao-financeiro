@@ -44,6 +44,10 @@ public class Payroll {
     @NotNull
     private UUID id;
 
+    @Column(name = "employee_id")
+    @NotNull
+    private UUID employeeId;
+
     @Column(name = "payment_date")
     @NotNull
     private LocalDate paymentDate;
