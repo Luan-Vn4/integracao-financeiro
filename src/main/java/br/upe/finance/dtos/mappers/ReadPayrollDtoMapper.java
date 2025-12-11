@@ -16,7 +16,10 @@ public class ReadPayrollDtoMapper {
             .employeeId(model.getEmployeeId())
             .moneyAmount(model.getMoneyAmount())
             .paymentDate(model.getPaymentDate())
-            .budgetItemId(model.getBudgetItem() != null ? model.getBudgetItem().getId() : null)
+            .budgetItemId(
+                model.getBudgetItem() != null ? model.getBudgetItem().getId()
+                    : null
+            )
             .createdAt(model.getCreatedAt())
             .updatedAt(model.getUpdatedAt())
             .build();

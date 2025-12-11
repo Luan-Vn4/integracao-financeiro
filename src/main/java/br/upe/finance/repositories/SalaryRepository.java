@@ -1,5 +1,6 @@
 package br.upe.finance.repositories;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,10 @@ import br.upe.finance.repositories.common.CrudRepository;
 
 @Repository
 public interface SalaryRepository
-        extends CrudRepository<Salary, UUID>,
-                JpaRepository<Salary, UUID>,
-                QuerydslPredicateExecutor<Salary> {}
+    extends CrudRepository<Salary, UUID>,
+    JpaRepository<Salary, UUID>,
+    QuerydslPredicateExecutor<Salary> {
+
+    Optional<Salary> findByEmployeeId(Integer employeeId);
+
+}

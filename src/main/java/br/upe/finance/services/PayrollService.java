@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -20,24 +19,35 @@ public class PayrollService {
     private final PayrollRepository payrollRepository;
     private final ReadPayrollDtoMapper readPayrollDtoMapper;
 
-    public List<ReadPayrollDto> getEmployeePayrolls(UUID employeeId) {
+    public List<ReadPayrollDto> getEmployeePayrolls(Integer employeeId) {
         return payrollRepository.findAllByEmployeeId(employeeId)
             .stream()
             .map(readPayrollDtoMapper::fromModel)
             .toList();
     }
 
-    public Optional<ReadPayrollDto> getEmployeePayrollByMonth(UUID employeeId, LocalDate dateInMonth) {
-        LocalDate startDate = dateInMonth.with(TemporalAdjusters.firstDayOfMonth());
-        LocalDate endDate = dateInMonth.with(TemporalAdjusters.lastDayOfMonth());
+    public Optional<ReadPayrollDto> getEmployeePayrollByMonth(
+        Integer employeeId,
+        LocalDate dateInMonth) {
+        LocalDate startDate = dateInMonth
+            .with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endDate = dateInMonth
+            .with(TemporalAdjusters.lastDayOfMonth());
 
-        return payrollRepository.findByEmployeeIdAndPaymentDateBetween(employeeId, startDate, endDate)
+        return payrollRepository
+            .findByEmployeeIdAndPaymentDateBetween(
+                employeeId,
+                startDate,
+                endDate
+            )
             .map(readPayrollDtoMapper::fromModel);
     }
 
     public List<ReadPayrollDto> getAllEmployeesPayroll(LocalDate dateInMonth) {
-        LocalDate startDate = dateInMonth.with(TemporalAdjusters.firstDayOfMonth());
-        LocalDate endDate = dateInMonth.with(TemporalAdjusters.lastDayOfMonth());
+        LocalDate startDate = dateInMonth
+            .with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endDate = dateInMonth
+            .with(TemporalAdjusters.lastDayOfMonth());
 
         return payrollRepository.findAllByPaymentDateBetween(startDate, endDate)
             .stream()

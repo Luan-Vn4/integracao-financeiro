@@ -10,10 +10,9 @@ import lombok.Builder;
 @Builder
 public record ReadPayrollDto(
     UUID id,
-    UUID employeeId,
+    Integer employeeId,
     BigDecimal moneyAmount,
     LocalDate paymentDate,
     UUID budgetItemId,
     LocalDateTime createdAt,
-    LocalDateTime updatedAt
-) {}
+    LocalDateTime updatedAt) {}

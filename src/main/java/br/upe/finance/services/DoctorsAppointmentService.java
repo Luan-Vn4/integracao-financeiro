@@ -30,15 +30,23 @@ public class DoctorsAppointmentService {
 
     @Transactional
     public void receiveAppointmentInfo(AppointmentInfoDto dto) {
+        System.out.println("Receiving appointment info: " + dto);
+
         Appointment appointment = appointmentMapper.toModel(dto);
         appointmentRepository.save(appointment);
+
+        System.out.println("Appointment saved: " + appointment);
 
         LocalDate date = dto.date();
         LocalDate startOfMonth = date.with(TemporalAdjusters.firstDayOfMonth());
         LocalDate endOfMonth = date.with(TemporalAdjusters.lastDayOfMonth());
 
         Optional<Payroll> payrollOpt = payrollRepository
-            .findByEmployeeIdAndPaymentDateBetween(dto.doctorId(), startOfMonth, endOfMonth);
+            .findByEmployeeIdAndPaymentDateBetween(
+                dto.doctorId(),
+                startOfMonth,
+                endOfMonth
+            );
 
         Payroll payroll;
 
@@ -46,10 +54,19 @@ public class DoctorsAppointmentService {
             payroll = payrollOpt.get();
             log.info("Updating existing payroll for Doctor {}", dto.doctorId());
         } else {
-            log.info("Payroll not found for Doctor {} in {}. Creating new one.", dto.doctorId(), date.getMonth());
-            
-            Salary doctorSalary = salaryRepository.findById(dto.doctorId())
-                .orElseThrow(() -> new RuntimeException("Doctor Salary not found for ID: " + dto.doctorId()));
+            log.info(
+                "Payroll not found for Doctor {} in {}. Creating new one.",
+                dto.doctorId(),
+                date.getMonth()
+            );
+
+            Salary doctorSalary = salaryRepository
+                .findByEmployeeId(dto.doctorId())
+                .orElseThrow(
+                    () -> new RuntimeException(
+                        "Doctor Salary not found for ID: " + dto.doctorId()
+                    )
+                );
 
             payroll = new Payroll();
             payroll.setEmployeeId(dto.doctorId());

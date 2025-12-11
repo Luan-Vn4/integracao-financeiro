@@ -46,7 +46,7 @@ public class Payroll {
 
     @Column(name = "employee_id")
     @NotNull
-    private UUID employeeId;
+    private Integer employeeId;
 
     @Column(name = "payment_date")
     @NotNull

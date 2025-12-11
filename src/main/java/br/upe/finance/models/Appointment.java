@@ -2,7 +2,6 @@ package br.upe.finance.models;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
@@ -40,12 +39,11 @@ public class Appointment {
 
     @Id
     @Column(name = "id")
-    @NotNull
-    private UUID id;
+    private Integer id;
 
     @Column(name = "doctor_id")
     @NotNull
-    private UUID doctorId;
+    private Integer doctorId;
 
     @Column(name = "date")
     @NotNull
@@ -110,7 +108,9 @@ public class Appointment {
 
     @PreUpdate
     private void updateBudgetItemMoneyAmount() {
-        this.budgetItem.setMoneyAmount(this.moneyAmount);
+        if (this.budgetItem != null) {
+            this.budgetItem.setMoneyAmount(this.moneyAmount);
+        }
     }
 
 }

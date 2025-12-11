@@ -21,9 +21,6 @@ spring:
       exclude: static/**,public/**,templates/**,META-INF/maven/**,META-INF/resources/**
     livereload:
       enabled: true
-  spring:
-    thymeleaf:
-      cache: false
   rabbitmq:
     host: ${RABBITMQ_HOST:localhost}
     port: ${RABBITMQ_PORT:5672}

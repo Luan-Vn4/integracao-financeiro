@@ -19,7 +19,6 @@ import br.upe.finance.repositories.PayrollRepository;
 import br.upe.finance.repositories.SalaryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -35,9 +34,9 @@ public class SalaryService {
 
     /// Public Methods ///
 
-    public Optional<ReadSalaryDto> findById(UUID employeeId) {
+    public Optional<ReadSalaryDto> findByEmployeeId(Integer employeeId) {
         return salaryRepository
-            .findById(employeeId)
+            .findByEmployeeId(employeeId)
             .map(readSalaryDtoMapper::fromModel);
     }
 
@@ -58,27 +57,36 @@ public class SalaryService {
     }
 
     /// Private Methods ///
-    
+
     private void createPayrollIfNotExists(Salary salary, LocalDate date) {
         LocalDate startOfMonth = date.with(TemporalAdjusters.firstDayOfMonth());
         LocalDate endOfMonth = date.with(TemporalAdjusters.lastDayOfMonth());
 
-        boolean exists = payrollRepository.findByEmployeeIdAndPaymentDateBetween(
-            salary.getEmployeeId(), startOfMonth, endOfMonth
-        ).isPresent();
+        boolean exists = payrollRepository
+            .findByEmployeeIdAndPaymentDateBetween(
+                salary.getEmployeeId(),
+                startOfMonth,
+                endOfMonth
+            ).isPresent();
 
         if (!exists) {
-            log.info("Creating initial payroll for employee {}", salary.getEmployeeId());
-            
+            log.info(
+                "Creating initial payroll for employee {}",
+                salary.getEmployeeId()
+            );
+
             Payroll firstPayroll = new Payroll();
             firstPayroll.setEmployeeId(salary.getEmployeeId());
             firstPayroll.setPaymentDate(date);
             firstPayroll.setMoneyAmount(salary.getMoneyAmount());
-            
+
             payrollRepository.save(firstPayroll);
         } else {
-            log.info("Payroll already exists for employee {} in month {}. Skipping creation.", 
-                salary.getEmployeeId(), date.getMonth());
+            log.info(
+                "Payroll already exists for employee {} in month {}. Skipping creation.",
+                salary.getEmployeeId(),
+                date.getMonth()
+            );
         }
     }
 }

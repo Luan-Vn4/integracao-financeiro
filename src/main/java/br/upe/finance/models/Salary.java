@@ -12,6 +12,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -31,9 +33,13 @@ public class Salary {
     /// Fields ///
 
     @Id
-    @Column(name = "employee_id")
+    @GeneratedValue(strategy = GenerationType.UUID)
     @NotNull
-    private UUID employeeId;
+    private UUID id;
+
+    @Column(name = "employee_id", unique = true)
+    @NotNull
+    private Integer employeeId;
 
     @Column(name = "money_amount", precision = 19, scale = 4)
     @NotNull

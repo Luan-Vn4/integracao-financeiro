@@ -12,13 +12,19 @@ import br.upe.finance.models.Payroll;
 
 @Repository
 public interface PayrollRepository extends JpaRepository<Payroll, UUID> {
-    
+
     // Pega todas as folhas de pagamento de um funcionário
-    List<Payroll> findAllByEmployeeId(UUID employeeId);
+    List<Payroll> findAllByEmployeeId(Integer employeeId);
 
     // Pega a folha de pagamento de um funcionário em um mês específico
-    Optional<Payroll> findByEmployeeIdAndPaymentDateBetween(UUID employeeId, LocalDate startDate, LocalDate endDate);
+    Optional<Payroll> findByEmployeeIdAndPaymentDateBetween(
+        Integer employeeId,
+        LocalDate startDate,
+        LocalDate endDate);
 
-    // Pega todas as folhas de pagamento de todos os funcionários em um mês específico
-    List<Payroll> findAllByPaymentDateBetween(LocalDate startDate, LocalDate endDate);
+    // Pega todas as folhas de pagamento de todos os funcionários em um mês
+    // específico
+    List<Payroll> findAllByPaymentDateBetween(
+        LocalDate startDate,
+        LocalDate endDate);
 }
