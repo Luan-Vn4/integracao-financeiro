@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salários - Sistema de Gestão Financeira</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">Gestão Financeira</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">Início</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Success Message -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1>Salários</h1>
+                <p class="text-muted" th:text="'Total de registros: ' + ${totalElements}">Total de registros: 0</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="mb-2">
+                    <a th:href="@{/salaries/new}" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-plus-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                            <path
+                                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                        </svg>
+                        Novo Salário
+                    </a>
+                </div>
+                <label for="pageSize" class="form-label">Itens por página:</label>
+                <select id="pageSize" class="form-select d-inline-block w-auto" onchange="changePageSize(this.value)">
+                    <option value="10" th:selected="${pageSize == 10}">10</option>
+                    <option value="25" th:selected="${pageSize == 25}">25</option>
+                    <option value="50" th:selected="${pageSize == 50}">50</option>
+                    <option value="100" th:selected="${pageSize == 100}">100</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID do Funcionário</th>
+                                <th>Valor</th>
+                                <th>Tipo</th>
+                                <th>Criado Em</th>
+                                <th>Atualizado Em</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${salaryPage.empty}">
+                                <td colspan="5" class="text-center text-muted">Nenhum registro encontrado</td>
+                            </tr>
+                            <tr th:each="salary : ${salaryPage.content}">
+                                <td th:text="${salary.employeeId}">-</td>
+                                <td th:text="${#numbers.formatDecimal(salary.moneyAmount, 0, 'COMMA', 2, 'POINT')}">-
+                                </td>
+                                <td>
+                                    <span class="badge"
+                                        th:classappend="${salary.type.name() == 'FIXED'} ? 'bg-success' : 'bg-info'"
+                                        th:text="${salary.type.name()}">-</span>
+                                </td>
+                                <td th:text="${#temporals.format(salary.createdAt, 'dd/MM/yyyy HH:mm')}">-</td>
+                                <td th:text="${#temporals.format(salary.updatedAt, 'dd/MM/yyyy HH:mm')}">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <nav th:if="${salaryPage.totalPages > 1}" aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mt-4">
+                        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{/salaries(page=${currentPage - 1}, size=${pageSize})}"
+                                th:if="${currentPage > 0}">Anterior</a>
+                            <span class="page-link" th:if="${currentPage == 0}">Anterior</span>
+                        </li>
+
+                        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, salaryPage.totalPages - 1)}"
+                            th:classappend="${pageNum == currentPage} ? 'active'">
+                            <a class="page-link" th:href="@{/salaries(page=${pageNum}, size=${pageSize})}"
+                                th:text="${pageNum + 1}" th:if="${pageNum != currentPage}">1</a>
+                            <span class="page-link" th:if="${pageNum == currentPage}" th:text="${pageNum + 1}">1</span>
+                        </li>
+
+                        <li class="page-item" th:classappend="${currentPage >= salaryPage.totalPages - 1} ? 'disabled'">
+                            <a class="page-link" th:href="@{/salaries(page=${currentPage + 1}, size=${pageSize})}"
+                                th:if="${currentPage < salaryPage.totalPages - 1}">Próximo</a>
+                            <span class="page-link" th:if="${currentPage >= salaryPage.totalPages - 1}">Próximo</span>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="text-center mt-3 text-muted" th:if="${salaryPage.totalPages > 1}">
+                    <small>Página <span th:text="${currentPage + 1}">1</span> de <span
+                            th:text="${salaryPage.totalPages}">1</span></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function changePageSize(size) {
+            window.location.href = '/salaries?page=0&size=' + size;
+        }
+    </script>
+</body>
+
+</html>

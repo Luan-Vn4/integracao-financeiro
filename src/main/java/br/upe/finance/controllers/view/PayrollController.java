@@ -1,8 +1,13 @@
 package br.upe.finance.controllers.view;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.time.YearMonth;
+import java.time.format.DateTimeParseException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,18 +25,39 @@ public class PayrollController {
 
     @GetMapping("/payrolls")
     public String listPayrolls(
-            @RequestParam(required = false) LocalDate month, 
+            @RequestParam(required = false) String month,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             Model model) {
 
-        if (month == null) {
-            month = LocalDate.now();
+        LocalDate monthDate;
+        if (month == null || month.isEmpty()) {
+            monthDate = LocalDate.now();
+        } else {
+            try {
+                // Parse "yyyy-MM" format and use first day of month
+                YearMonth yearMonth = YearMonth.parse(month);
+                monthDate = yearMonth.atDay(1);
+            } catch (DateTimeParseException e) {
+                // Fallback to current month if parsing fails
+                monthDate = LocalDate.now();
+            }
         }
 
-        List<ReadPayrollDto> payrolls = payrollService.getAllEmployeesPayroll(month);
+        if (size != 10 && size != 25 && size != 50 && size != 100) {
+            size = 10;
+        }
 
-        model.addAttribute("payrolls", payrolls);
-        model.addAttribute("currentMonth", month);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "paymentDate"));
+        Page<ReadPayrollDto> payrollPage = payrollService.getAllEmployeesPayroll(monthDate, pageable);
 
-        return "payrolls/list"; // You need to create this HTML file
+        model.addAttribute("payrollPage", payrollPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("totalPages", payrollPage.getTotalPages());
+        model.addAttribute("totalElements", payrollPage.getTotalElements());
+        model.addAttribute("currentMonth", monthDate);
+
+        return "payrolls/list";
     }
 }

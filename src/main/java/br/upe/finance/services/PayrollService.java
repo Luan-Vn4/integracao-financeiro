@@ -5,6 +5,8 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.upe.finance.dtos.ReadPayrollDto;
@@ -53,5 +55,18 @@ public class PayrollService {
             .stream()
             .map(readPayrollDtoMapper::fromModel)
             .toList();
+    }
+
+    public Page<ReadPayrollDto> getAllEmployeesPayroll(
+        LocalDate dateInMonth,
+        Pageable pageable) {
+        LocalDate startDate = dateInMonth
+            .with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endDate = dateInMonth
+            .with(TemporalAdjusters.lastDayOfMonth());
+
+        return payrollRepository
+            .findAllByPaymentDateBetween(startDate, endDate, pageable)
+            .map(readPayrollDtoMapper::fromModel);
     }
 }

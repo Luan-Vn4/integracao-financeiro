@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Salário - Sistema de Gestão Financeira</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">Gestão Financeira</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">Início</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1>Novo Salário</h1>
+                <p class="text-muted">Preencha os dados abaixo para registrar um novo salário</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <form th:action="@{/salaries}" th:object="${salaryRequest}" method="post">
+                            <!-- Global Error Messages -->
+                            <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger" role="alert">
+                                <ul class="mb-0">
+                                    <li th:each="error : ${#fields.globalErrors()}" th:text="${error}"></li>
+                                </ul>
+                            </div>
+                            <!-- Employee ID Field -->
+                            <div class="mb-3">
+                                <label for="employeeId" class="form-label">ID do Funcionário <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="employeeId" th:field="*{employeeId}"
+                                    th:classappend="${#fields.hasErrors('employeeId')} ? 'is-invalid'" required>
+                                <div th:if="${#fields.hasErrors('employeeId')}" class="invalid-feedback">
+                                    <span th:each="error : ${#fields.errors('employeeId')}" th:text="${error}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Money Amount Field -->
+                            <div class="mb-3">
+                                <label for="moneyAmount" class="form-label">Valor do Salário <span
+                                        class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="number" class="form-control" id="moneyAmount" th:field="*{moneyAmount}"
+                                        th:classappend="${#fields.hasErrors('moneyAmount')} ? 'is-invalid'" step="0.01"
+                                        min="0.01" required>
+                                    <div th:if="${#fields.hasErrors('moneyAmount')}" class="invalid-feedback">
+                                        <span th:each="error : ${#fields.errors('moneyAmount')}"
+                                            th:text="${error}"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Salary Type Field -->
+                            <div class="mb-3">
+                                <label for="type" class="form-label">Tipo de Salário <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" id="type" th:field="*{type}"
+                                    th:classappend="${#fields.hasErrors('type')} ? 'is-invalid'" required>
+                                    <option value="">Selecione o tipo</option>
+                                    <option value="FIXED">Fixo</option>
+                                    <option value="VARIABLE">Variável</option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('type')}" class="invalid-feedback">
+                                    <span th:each="error : ${#fields.errors('type')}" th:text="${error}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <a th:href="@{/salaries}" class="btn btn-secondary">Cancelar</a>
+                                <button type="submit" class="btn btn-primary">Registrar Salário</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

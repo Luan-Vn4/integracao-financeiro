@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -27,4 +29,11 @@ public interface PayrollRepository extends JpaRepository<Payroll, UUID> {
     List<Payroll> findAllByPaymentDateBetween(
         LocalDate startDate,
         LocalDate endDate);
+
+    // Pega todas as folhas de pagamento de todos os funcionários em um mês
+    // específico com paginação
+    Page<Payroll> findAllByPaymentDateBetween(
+        LocalDate startDate,
+        LocalDate endDate,
+        Pageable pageable);
 }
